@@ -1,0 +1,43 @@
+{
+	"MONGODB_CONNECTION": "mongodb://127.0.0.1:27017",
+
+	"TASK_PREPARING": "preparing",
+	"TASK_PROCESSING": "processing",
+	"TASK_SUCCEED": "succeed",
+	"TASK_FAILED": "failed",
+
+	"SUBTASK_PREPARE": "preparing",
+	"SUBTASK_PROCESSING": "processing",
+	"SUBTASK_SUCCEED": "succeed",
+	"SUBTASK_FAILED": "failed",
+
+	"RESOLVER_MAPPER": {
+		"eat": "eat",
+		"sleep": "sleep"
+	},
+
+	"HANDLERS_MAPPER": {
+		"say_hi": "say_hi"
+	},
+
+	"STATEMACHINE": {
+		"wake": {
+			"sleep": ["TASK_EAT", "TASK_WASH", "TASK_SLEEP"]
+		},
+		"hungry": {
+			"full": ["TASK_EAT"]
+		}
+	},
+
+	"SUBTASK_DEPS": {
+		"TASK_EAT": ["TASK_SLEEP"],
+		"TASK_WASH": ["TASK_SLEEP"],
+		"TASK_SLEEP": []
+	},
+
+	"SUBTASK_HANDLER": {
+		"TASK_EAT": "executing TASK_EAT...",
+		"TASK_WASH": "executing TASK_WASH...",
+		"TASK_SLEEP": "executing TASK_SLEEP..."
+	}
+}
