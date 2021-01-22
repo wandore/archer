@@ -9,7 +9,9 @@ import (
 	"github.com/coreos/etcd/clientv3"
 	"github.com/coreos/etcd/contrib/recipes"
 	"log"
+	"math/rand"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -34,7 +36,7 @@ func main() {
 	defer cli.Close()
 
 	// 创建/获取队列
-	q := recipe.NewQueue(cli, *queueName)
+	q := recipe.NewPriorityQueue(cli, *queueName)
 
 	// 从命令行读取命令
 	consolescanner := bufio.NewScanner(os.Stdin)
@@ -42,13 +44,28 @@ func main() {
 		action := consolescanner.Text()
 		switch action {
 		case "push": // 加入队列
+			times := rand.Intn(5)
+			var pr int
+			if times == 0 {
+				pr = 0
+			} else {
+				if times < 3 {
+					pr = 1
+				} else {
+					pr = 2
+				}
+			}
+			fmt.Println(times)
+			fmt.Println(pr)
+
 			paramMp := make(map[string]string, 0)
 			paramMp["name"] = "create_vm"
 			paramMp["source"] = "disk"
+			paramMp["times"] = strconv.Itoa(times)
+			paramMp["priority"] = strconv.Itoa(pr)
 			paramJson, _ := json.Marshal(paramMp)
 			paramStr := string(paramJson)
-
-			q.Enqueue(paramStr) // 入队
+			q.Enqueue(paramStr, uint16(pr)) // 入队
 		case "pop": // 从队列弹出
 			param, err := q.Dequeue() // 出队
 			if err != nil {
