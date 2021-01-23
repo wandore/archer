@@ -1,6 +1,8 @@
 package dag
 
-import "archer/common"
+import (
+	"log"
+)
 
 type DAG struct {
 	dag map[string][]string
@@ -25,44 +27,58 @@ func (d *DAG) AddEdge(root, target string) error {
 	return nil
 }
 
-func (d *DAG) TopoSort() ([]string, error) {
-	res := make([]string, 0)
+func (d *DAG) TopoSort() [][]string {
+	res := make([][]string, 0)
+
 	inDegree := make(map[string]int, 0)
-	q := make([]string, 0)
-	for k, v := range d.dag {
-		inDegree[k] = 0
-		for _, node := range v {
-			inDegree[node] = 0
-		}
-	}
 	for _, arr := range d.dag {
 		for _, v := range arr {
 			inDegree[v]++
 		}
 	}
+
+	q := make([]string, 0)
 	for k, _ := range d.dag {
+		_, exist := inDegree[k]
+		if !exist {
+			inDegree[k] = 0
+		}
 		if inDegree[k] == 0 {
-			q = append(res, k)
+			q = append(q, k)
 		}
 	}
+
 	if len(q) == 0 {
-		return nil, common.ErrCyclicGraph
+		log.Fatal("toposort failed because of cyclic graph")
 	}
+
 	for len(q) > 0 {
-		node := q[0]
-		res = append(res, node)
-		q = q[1:]
-		for _, v := range d.dag[node] {
-			inDegree[v]--
-			if inDegree[v] == 0 {
-				q = append(q, v)
+		n := len(q)
+		nodeList := make([]string, 0)
+		for n > 0 {
+			node := q[0]
+			nodeList = append(nodeList, node)
+			q = q[1:]
+			for _, v := range d.dag[node] {
+				inDegree[v]--
+				if inDegree[v] == 0 {
+					q = append(q, v)
+				}
 			}
+			n--
 		}
+		res = append(res, nodeList)
 	}
-	if len(res) != len(inDegree) {
-		return nil, common.ErrCyclicGraph
+
+	n := 0
+	for _, v := range res {
+		n += len(v)
 	}
-	return res, nil
+	if n != len(inDegree) {
+		log.Fatal("toposort failed because of cyclic graph")
+	}
+
+	return res
 }
 
 func New() *DAG {
