@@ -9,13 +9,16 @@ import (
 	"github.com/coreos/etcd/clientv3"
 	"github.com/coreos/etcd/contrib/recipes"
 	"log"
+	"math/rand"
 	"os"
+	"runtime"
+	"time"
 )
 
 
 var (
-	role = flag.String("role", "", "roles: submitter or worker")
-	task = flag.String("task", "", "task name: task3")
+	role = flag.String("role", "", "roles: submitter/worker")
+	task = flag.String("task", "", "task name: task0/task1/task2/task3")
 )
 
 
@@ -32,8 +35,13 @@ func main() {
 		}
 	}
 
+	runtime.GOMAXPROCS(runtime.NumCPU())
+
 	common.Init()
-	common.CheckTaskExist(*task)
+
+	if *role == "submitter" {
+		common.CheckTaskExist(*task)
+	}
 
 	endpoints := []string{common.EtcdUrl}
 
@@ -50,10 +58,22 @@ func main() {
 	log.Println("connect to queue succeed")
 
 	if *role == "submitter" {
-		s := submitter.New(*task)
-		s.Submit(q)
+		s := submitter.New()
+		s.Submit(*task, q)
+
+		for {
+			rand.Seed(time.Now().UnixNano())
+			n := rand.Intn(3)
+			taskList := []string{"task0", "task1", "task2", "task3"}
+
+			s.Submit(taskList[n], q)
+			time.Sleep(30 * time.Second)
+		}
 	} else {
 		w := worker.New()
-		w.Work(q)
+		for {
+			w.Work(q)
+			time.Sleep(10 * time.Second)
+		}
 	}
 }

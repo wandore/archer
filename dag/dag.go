@@ -8,7 +8,7 @@ type DAG struct {
 	dag map[string][]string
 }
 
-func (d *DAG) AddEdge(root, target string) error {
+func (d *DAG) AddEdge(root, target string) {
 	_, exist := d.dag[root]
 	if exist {
 		flag := false
@@ -24,7 +24,6 @@ func (d *DAG) AddEdge(root, target string) error {
 	} else {
 		d.dag[root] = append(d.dag[root], target)
 	}
-	return nil
 }
 
 func (d *DAG) TopoSort() [][]string {

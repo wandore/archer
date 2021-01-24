@@ -21,7 +21,8 @@ func MapToStr(taskMap map[string]interface{}) string {
 	taskJson, _ := json.Marshal(taskMap)
 	taskStr := string(taskJson)
 
-	log.Println("taskMap to taskStr succeed")
+	name := taskMap["name"].(string)
+	log.Println(name + " taskMap to taskStr succeed")
 
 	return taskStr
 }
@@ -34,7 +35,8 @@ func StrToMap(taskStr string) map[string]interface{} {
 		log.Fatal(err)
 	}
 
-	log.Println("taskStr to taskMap succeed")
+	name := taskMap["name"].(string)
+	log.Println(name + " taskStr to taskMap succeed")
 
 	return taskMap
 }
@@ -137,33 +139,27 @@ func GetTaskFunc(name string) func(chan int) {
 
 func Task0(ch chan int) {
 	rand.Seed(time.Now().UnixNano())
-	n := rand.Intn(1)
+	n := rand.Intn(2)
 	log.Println("return_code from Task0 is " + strconv.Itoa(n%2))
 	ch <- n%2
 	WG.Done()
 }
 
 func Task1(ch chan int) {
-	rand.Seed(time.Now().UnixNano())
-	n := rand.Intn(1)
-	log.Println("return_code from Task1 is " + strconv.Itoa(n%2))
-	ch <- n%2
+	log.Println("return_code from Task1 is " + strconv.Itoa(0))
+	ch <- 0
 	WG.Done()
 }
 
 func Task2(ch chan int) {
-	rand.Seed(time.Now().UnixNano())
-	n := rand.Intn(1)
-	log.Println("return_code from Task2 is " + strconv.Itoa(n%2))
-	ch <- n%2
+	log.Println("return_code from Task2 is " + strconv.Itoa(0))
+	ch <- 0
 	WG.Done()
 }
 
 func Task3(ch chan int) {
-	rand.Seed(time.Now().UnixNano())
-	n := rand.Intn(1)
-	log.Println("return_code from Task3 is " + strconv.Itoa(n%2))
-	ch <- n%2
+	log.Println("return_code from Task3 is " + strconv.Itoa(0))
+	ch <- 0
 	WG.Done()
 }
 

@@ -12,23 +12,23 @@ type Submitter struct {
 	taskMap map[string]interface{}
 }
 
-func (s *Submitter) Submit(q *recipe.PriorityQueue) {
+func (s *Submitter) Submit(name string, q *recipe.PriorityQueue) {
+	s.taskMap["name"] = name
+	s.taskMap["uuid"] = uuid.NewV4()
+	s.taskMap["start"] = time.Now().Format("2006-01-02 15:04:05")
+	s.taskMap["end"] = ""
+	s.taskMap["subtasks"] = common.GetSubTasks(name)
+	s.taskMap["topo"] = ""
+	s.taskMap["status"] = common.TaskPreparing
+	s.taskMap["priority"] = common.QueueMiddlePriority
+	s.taskMap["times"] = 0
+
 	taskStr := common.MapToStr(s.taskMap)
 	pr := s.taskMap["priority"].(int)
 	q.Enqueue(taskStr, uint16(pr))
 	log.Println(taskStr + " push into queue")
 }
 
-func New(name string) *Submitter {
-	submitter := Submitter{taskMap: make(map[string]interface{}, 0)}
-	submitter.taskMap["name"] = name
-	submitter.taskMap["uuid"] = uuid.NewV4()
-	submitter.taskMap["start"] = time.Now().Format("2006-01-02 15:04:05")
-	submitter.taskMap["end"] = ""
-	submitter.taskMap["subtasks"] = common.GetSubTasks(name)
-	submitter.taskMap["topo"] = ""
-	submitter.taskMap["status"] = common.TaskPreparing
-	submitter.taskMap["priority"] = common.QueueMiddlePriority
-	submitter.taskMap["times"] = 0
-	return &submitter
+func New() *Submitter {
+	return &Submitter{taskMap: make(map[string]interface{}, 0)}
 }
