@@ -33,7 +33,7 @@ func (w *Worker) updateTaskTimes() {
 	times := int(w.taskMap["times"].(float64)) + 1
 	w.taskMap["times"] = times
 	name := w.taskMap["name"].(string)
-	log.Println(name + " update task times from " + strconv.Itoa(times - 1) + " to " + strconv.Itoa(times))
+	log.Println(name + " update task times from " + strconv.Itoa(times-1) + " to " + strconv.Itoa(times))
 }
 
 func (w *Worker) updateTaskPriority() {
@@ -84,7 +84,7 @@ func (w *Worker) updateSubTasks(overSubTasks []string) {
 	for _, t := range overSubTasks {
 		for k, v := range subTasks {
 			if v == t {
-				w.taskMap["subtasks"] = append(subTasks[:k], subTasks[k + 1:]...)
+				w.taskMap["subtasks"] = append(subTasks[:k], subTasks[k+1:]...)
 				break
 			}
 		}
@@ -120,8 +120,8 @@ func (w *Worker) action() ([]string, bool) {
 			go common.TaskFuncMap[subtask](chs[index])
 		}
 		common.WG.Wait()
-		for index, ch := range(chs) {
-			returnCode := <- ch
+		for index, ch := range chs {
+			returnCode := <-ch
 			if returnCode == 0 {
 				name := w.taskMap["name"].(string)
 				log.Println("subtask of " + name + ": " + v[index] + " succeed")
@@ -163,6 +163,3 @@ func (w *Worker) Work(q *recipe.PriorityQueue) {
 func New() *Worker {
 	return &Worker{}
 }
-
-
-

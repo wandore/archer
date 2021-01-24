@@ -15,12 +15,10 @@ import (
 	"time"
 )
 
-
 var (
 	role = flag.String("role", "", "roles: submitter/worker")
 	task = flag.String("task", "", "task name: task0/task1/task2/task3")
 )
-
 
 func main() {
 	flag.Parse()

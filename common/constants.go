@@ -6,29 +6,23 @@ const (
 
 	// queue name
 	ProcessingQueue = "ProcessingQueue"
-	SucceedQueue = "SucceedQueue"
+	SucceedQueue    = "SucceedQueue"
 
 	// queue priority
-	QueueHighPriority = 0
+	QueueHighPriority   = 0
 	QueueMiddlePriority = 1
-	QueueLowPriority = 2
+	QueueLowPriority    = 2
 
 	// task status
-	TaskPreparing = "Preparing"
+	TaskPreparing  = "Preparing"
 	TaskProcessing = "Processing"
-	TaskSucceed = "Succeed"
-	TaskFailed = "Failed"
+	TaskSucceed    = "Succeed"
+	TaskFailed     = "Failed"
 
 	// all tasks
 	AllTasks = "task0, task1, task2, task3"
 
 	// task deps
 	TaskDeps = "task3: task2 #" +
-		       "task2: task1, task0"
+		"task2: task1, task0"
 )
-
-
-
-
-
-

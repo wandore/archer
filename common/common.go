@@ -41,7 +41,7 @@ func StrToMap(taskStr string) map[string]interface{} {
 	return taskMap
 }
 
-func Init()  {
+func Init() {
 	PreAllTasksList()
 	PreTaskDepsMap()
 	PreSubTasksMap()
@@ -75,7 +75,7 @@ func PreSubTasksMap() {
 
 		i := 0
 
-		for i < len(subTasks)  {
+		for i < len(subTasks) {
 			task := subTasks[i]
 			for _, v := range TaskDepsMap[task] {
 				exist := false
@@ -141,7 +141,7 @@ func Task0(ch chan int) {
 	rand.Seed(time.Now().UnixNano())
 	n := rand.Intn(2)
 	log.Println("return_code from Task0 is " + strconv.Itoa(n%2))
-	ch <- n%2
+	ch <- n % 2
 	WG.Done()
 }
 
@@ -162,7 +162,3 @@ func Task3(ch chan int) {
 	ch <- 0
 	WG.Done()
 }
-
-
-
-
